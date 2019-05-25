@@ -37,10 +37,10 @@ class ReleaseFactory
     {
         $name = null;
         if (Str::endsWith($url, '.zip')) {
-            $name = 'itineris/wordpress';
+            $name = 'itinerisltd/wordpress';
         }
         if (Str::endsWith($url, '.tar.gz')) {
-            $name = 'itineris/wordpress-tar';
+            $name = 'itinerisltd/wordpress-tar';
         }
 
         return $name;

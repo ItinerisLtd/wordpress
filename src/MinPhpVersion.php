@@ -5,7 +5,7 @@ namespace Composer\Itineris\WordPress;
 
 use Composer\Semver\Semver;
 
-class MinPhpRequirement
+class MinPhpVersion
 {
     /**
      * Determine minimum PHP version for WordPress core.

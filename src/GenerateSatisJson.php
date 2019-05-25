@@ -13,7 +13,7 @@ class GenerateSatisJson
     public static function run(Event $event): void
     {
         $versionParser = new VersionParser();
-        $minPhpRequirement = new MinPhpRequirement();
+        $minPhpRequirement = new MinPhpVersion();
         $releaseFactory = new ReleaseFactory($versionParser, $minPhpRequirement);
         $io = $event->getIO();
         $rfs = new RemoteFilesystem($io);

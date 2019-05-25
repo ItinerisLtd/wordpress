@@ -7,63 +7,76 @@ use RuntimeException;
 
 class ReleaseRepo
 {
-    protected const RELEASES_URL = 'https://wordpress.org/download/releases/';
-    protected const KNOWN_RELEASES = 304; // As of 18 May 2019.
+    protected const RELEASE_FEED_URL = 'https://wordpress.org/download/releases/';
+    protected const KNOWN_RELEASES = 612; // As of 25 May 2019.
+    // phpcs:ignore Generic.Files.LineLength.TooLong
+    protected const DOWNLOAD_URL_PATTERN = '/<a[^>]*href="(?<downloadUrl>https:\/\/[\S]+\/wordpress-[4-9]\S+[^IIS]\.(zip|tar\.gz))\.sha1"[^>]*>/';
+
+    /** @var ReleaseFactory */
+    protected $releaseFactory;
+
+    public function __construct(ReleaseFactory $releaseFactory)
+    {
+        $this->releaseFactory = $releaseFactory;
+    }
 
     public function all(): array
     {
-        $html = file_get_contents(static::RELEASES_URL);
+        $downloadUrls = $this->fetchDownloadUrls();
+        return $this->makeReleases($downloadUrls);
+    }
+
+    protected function fetchDownloadUrls(): array
+    {
+        $matches = [];
+
+        $html = file_get_contents(static::RELEASE_FEED_URL);
         if (false === $html) {
-            throw new RuntimeException('Failed to download ' . static::RELEASES_URL);
+            throw new RuntimeException('Failed to download ' . static::RELEASE_FEED_URL);
         }
 
-        preg_match_all(
-            '/<a[^>]*href="(?<releaseUrl>https:\/\/[\S]+\/wordpress-[4-9]\S+[^IIS]\.zip)\.sha1"[^>]*>/',
-            $html,
-            $matches
-        );
-        $releaseUrls = $matches['releaseUrl'] ?? [];
+        preg_match_all(static::DOWNLOAD_URL_PATTERN, $html, $matches);
+        $downloadUrls = $matches['downloadUrl'] ?? [];
+        $downloadUrls = array_unique($downloadUrls);
 
-        static::failIfReleaseUrlsNotFound($releaseUrls);
+        $this->failIfDownloadUrlsNotFound($downloadUrls);
 
-        $releases = array_map(function (string $releaseUrl): ?Release {
-            return Release::parse($releaseUrl);
-        }, $releaseUrls);
+        return $downloadUrls;
+    }
+
+    protected function failIfDownloadUrlsNotFound(array $downloadUrls): void
+    {
+        $count = count($downloadUrls);
+
+        if ($count >= static::KNOWN_RELEASES) {
+            return;
+        }
+
+        $message = sprintf('Only %1$d package URL(s) found on %2$s', $count, static::RELEASE_FEED_URL);
+        throw new RuntimeException($message);
+    }
+
+    protected function makeReleases(array $downloadUrls): array
+    {
+        $releases = array_map(function (string $downloadUrl): ?Release {
+            return $this->releaseFactory->make($downloadUrl);
+        }, $downloadUrls);
         $releases = array_filter($releases);
 
-        $this->failIfReleaseCannotBeParsed($releases);
+        $this->failIfReleasesCannotBeParsed($releases);
 
         return $releases;
     }
 
-    protected static function failIfReleaseUrlsNotFound(array $urls): void
+    protected function failIfReleasesCannotBeParsed(array $releases): void
     {
-        if (count($urls) >= static::KNOWN_RELEASES) {
+        $count = count($releases);
+
+        if ($count >= static::KNOWN_RELEASES) {
             return;
         }
 
-        $message = sprintf(
-            'Only %1$d release URL(s) found on %2$s',
-            count($urls),
-            static::RELEASES_URL
-        );
-        throw new RuntimeException($message);
-    }
-
-    /**
-     * @param array $releases
-     */
-    protected function failIfReleaseCannotBeParsed(array $releases): void
-    {
-        if (count($releases) >= static::KNOWN_RELEASES) {
-            return;
-        }
-
-        $message = sprintf(
-            'Only %1$d release(s) parsed from %2$s',
-            count($releases),
-            static::RELEASES_URL
-        );
+        $message = sprintf('Only %1$d release(s) parsed from %2$s', $count, static::RELEASE_FEED_URL);
         throw new RuntimeException($message);
     }
 }

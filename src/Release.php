@@ -3,63 +3,32 @@ declare(strict_types=1);
 
 namespace Composer\Itineris\WordPress;
 
-use Composer\Package\Version\VersionParser;
-use UnexpectedValueException;
-
 class Release
 {
     /** @var string */
     protected $name;
     /** @var string */
-    protected $distUrl;
-    /** @var string */
     protected $version;
-    /** @var string */
-    protected $distType;
+    /** @var array */
+    protected $require;
+    /** @var array */
+    protected $dist;
 
-    public function __construct(string $name, string $distType, string $distUrl, string $version)
+    public function __construct(string $name, string $version, array $dist, array $require)
     {
         $this->name = $name;
-        $this->distType = $distType;
-        $this->distUrl = $distUrl;
         $this->version = $version;
+        $this->dist = $dist;
+        $this->require = $require;
     }
 
-    public static function parse(string $url): ?self
-    {
-        $versionParser = new VersionParser();
-
-        preg_match('/\S+\/wordpress-(?<version>\S+)\.zip/', $url, $matches);
-        $version = (string) ($matches['version'] ?? '');
-
-        return static::isVersion($version, $versionParser)
-            ? new static('itinerisltd/wordpress', 'zip', $url, $version)
-            : null;
-    }
-
-    protected static function isVersion(string $string, VersionParser $versionParser): bool
-    {
-        try {
-            $versionParser->normalize($string);
-
-            return true;
-        } catch (UnexpectedValueException $exception) {
-            return false;
-        }
-    }
-
-    public function toPackageArray(): array
+    public function toArray(): array
     {
         return [
             'name' => $this->name,
             'version' => $this->version,
-            'dist' => [
-                'url' => $this->distUrl,
-                'type' => $this->distType,
-            ],
-            'require' => [
-                'roots/wordpress-core-installer' => '>=1.0.0',
-            ],
+            'dist' => $this->dist,
+            'require' => $this->require,
             'type' => 'wordpress-core',
             'description' => 'WordPress is web software you can use to create a beautiful website or blog.',
             'keywords' => [

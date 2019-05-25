@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Composer\Itineris\WordPress;
 
+use Composer\Util\RemoteFilesystem;
 use RuntimeException;
 
 class ReleaseRepo
 {
+    protected const RELEASE_FEED_HOSTNAME = 'wordpress.org';
     protected const RELEASE_FEED_URL = 'https://wordpress.org/download/releases/';
     protected const KNOWN_RELEASES = 612; // As of 25 May 2019.
     // phpcs:ignore Generic.Files.LineLength.TooLong
@@ -14,10 +16,13 @@ class ReleaseRepo
 
     /** @var ReleaseFactory */
     protected $releaseFactory;
+    /** @var RemoteFilesystem */
+    protected $rfs;
 
-    public function __construct(ReleaseFactory $releaseFactory)
+    public function __construct(ReleaseFactory $releaseFactory, RemoteFilesystem $rfs)
     {
         $this->releaseFactory = $releaseFactory;
+        $this->rfs = $rfs;
     }
 
     public function all(): array
@@ -30,10 +35,7 @@ class ReleaseRepo
     {
         $matches = [];
 
-        $html = file_get_contents(static::RELEASE_FEED_URL);
-        if (false === $html) {
-            throw new RuntimeException('Failed to download ' . static::RELEASE_FEED_URL);
-        }
+        $html = (string) $this->rfs->getContents(static::RELEASE_FEED_HOSTNAME, static::RELEASE_FEED_URL);
 
         preg_match_all(static::DOWNLOAD_URL_PATTERN, $html, $matches);
         $downloadUrls = $matches['downloadUrl'] ?? [];

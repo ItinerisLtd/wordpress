@@ -28,6 +28,7 @@
   "require": {
     "php": "^7.3",
     "ext-json": "*",
+    "composer/composer": "^1.8",
     "composer/satis": "dev-master#4c6e51c"
   },
   "require-dev": {

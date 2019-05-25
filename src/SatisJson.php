@@ -30,7 +30,7 @@ class SatisJson
         $satis = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
         $packages = array_map(function (Release $release): array {
-            return $release->toPackageArray();
+            return $release->toArray();
         }, $this->releaseRepo->all());
 
         $satis['repositories'][] = [

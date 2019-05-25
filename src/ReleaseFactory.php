@@ -11,10 +11,13 @@ class ReleaseFactory
     protected const VERSION_PATTERN = '/\S+\/wordpress-(?<version>\S+[^IIS])(-IIS)?\.(zip|tar\.gz)/';
     /** @var VersionParser */
     protected $versionParser;
+    /** @var MinPhpRequirement */
+    protected $minPhpRequirement;
 
-    public function __construct(VersionParser $versionParser)
+    public function __construct(VersionParser $versionParser, MinPhpRequirement $minPhpRequirement)
     {
         $this->versionParser = $versionParser;
+        $this->minPhpRequirement = $minPhpRequirement;
     }
 
     public function make(string $downloadUrl): ?Release
@@ -28,7 +31,7 @@ class ReleaseFactory
             return null;
         }
 
-        $require = $this->makeRequire();
+        $require = $this->makeRequire($version);
 
         return new Release($name, $version, $dist, $require);
     }
@@ -83,10 +86,12 @@ class ReleaseFactory
         }
     }
 
-    protected function makeRequire(): array
+    protected function makeRequire(string $version): array
     {
+        $minPhpVersion = $this->minPhpRequirement->forWordPressCore($version);
+
         return [
-            'php' => '>= 5.4',
+            'php' => ">= ${minPhpVersion}",
             'roots/wordpress-core-installer' => '>=1.0.0',
         ];
     }

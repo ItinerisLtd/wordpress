@@ -15,11 +15,17 @@ class ReleaseTest extends Unit
             [
                 'type' => 'my-type',
                 'url' => 'https://example.test/abc/xyz.zip',
-                'shasum' => 'my-shasum',
+                'shasum' => null,
+                'mirrors' => null,
+                'shasum-1' => 'abc123',
+                'mirrors-1' => [
+                    'https://www.example.test/abc/xyz.zip',
+                ],
             ],
             [
                 'php' => '^2.2.3',
                 'your-vendor/your-package' => '>=3.2.3-beta4',
+                'their-vendor/their-package' => null,
             ]
         );
 
@@ -31,7 +37,10 @@ class ReleaseTest extends Unit
             'dist' => [
                 'type' => 'my-type',
                 'url' => 'https://example.test/abc/xyz.zip',
-                'shasum' => 'my-shasum',
+                'shasum-1' => 'abc123',
+                'mirrors-1' => [
+                    'https://www.example.test/abc/xyz.zip',
+                ],
             ],
             'require' => [
                 'php' => '^2.2.3',

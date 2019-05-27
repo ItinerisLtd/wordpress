@@ -1,20 +1,12 @@
-# Auto-detect text files, ensure they use LF.
-*       text=auto eol=lf
 
-# These files are always considered text and should use LF.
-# See core.whitespace @ http://git-scm.com/docs/git-config for whitespace flags.
-*.php   text eol=lf whitespace=blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,tabwidth=4 diff=php
-*.json  text eol=lf whitespace=blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,tabwidth=4
+# Path-based git attributes
+# https://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
 
-# Exclude these files from git export.
-# This will effect when package is installed via --prefer-dist
-/*.dist export-ignore
-/.*.dist export-ignore
-/.*.yml export-ignore
-/.dockerignore export-ignore
-/.git* export-ignore
-/Dockerfile export-ignore
-/box.json export-ignore
-/docs/ export-ignore
-/tests/ export-ignore
-/webpack.config.js export-ignore
+# Ignore everything.
+/* export-ignore
+
+# Export white-listed production code only.
+/src        -export-ignore
+/composer.* -export-ignore
+/LICENSE    -export-ignore
+/README.md  -export-ignore

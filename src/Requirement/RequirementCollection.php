@@ -40,7 +40,6 @@ class RequirementCollection
         }, $this->requirements);
 
         $require = array_combine($names, $versions);
-
         if (false === $require) {
             throw new RuntimeException(__METHOD__ . '(): Number of elements mismatch');
         }

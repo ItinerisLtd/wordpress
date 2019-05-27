@@ -66,21 +66,14 @@ workflows:
           post-steps:
             - composer/exec:
                 command: phpstan:analyse
-      - composer/install:
-          name: test-build
-          executor: composer/seven
-          install_args: --no-interaction --no-dev --prefer-dist
-          post-steps:
-            - composer/exec:
-                command: satis:build
 
-  deploy-cron:
-    <<: *deploy-jobs-master
-    triggers:
-      - schedule:
-          <<: *only-master-filter
-          # Hourly
-          cron: "30 * * * *"
-
-  deploy-on-push:
-    <<: *deploy-jobs-master
+#  deploy-cron:
+#    <<: *deploy-jobs-master
+#    triggers:
+#      - schedule:
+#          <<: *only-master-filter
+#          # Hourly
+#          cron: "30 * * * *"
+#
+#  deploy-on-push:
+#    <<: *deploy-jobs-master

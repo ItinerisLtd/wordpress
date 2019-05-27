@@ -1,5 +1,5 @@
 {
-  "name": "itinerisltd/wordpress",
+  "name": "itinerisltd/wordpress-packager",
   "type": "project",
   "description": "TODO.",
   "keywords": [
@@ -8,7 +8,7 @@
     "wordpress",
     "wp"
   ],
-  "homepage": "https://github.com/itinerisltd/wordpress/",
+  "homepage": "https://github.com/itinerisltd/wordpress-packager",
   "license": "MIT",
   "authors": [
     {
@@ -57,7 +57,7 @@
   },
   "support": {
     "email": "hello@itineris.co.uk",
-    "issues": "https://github.com/ItinerisLtd/wordpress/issues",
-    "source": "https://github.com/ItinerisLtd/wordpress"
+    "issues": "https://github.com/itinerisltd/wordpress-packager/issues",
+    "source": "https://github.com/itinerisltd/wordpress-packager"
   }
 }

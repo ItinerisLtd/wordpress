@@ -31,52 +31,20 @@ class ReleaseFactory
 
     public function build(string $downloadUrl): ?Release
     {
-        $name = $this->parseName($downloadUrl);
-        $dist = $this->parseDist($downloadUrl);
         $version = $this->parseVersion($downloadUrl);
-
-        // in_array is short. However, PHPStan doesn't understand `in_array`.
-        if (null === $name || null === $dist || null === $version) {
+        if (null === $version) {
             return null;
         }
 
         return new Release(
-            $name,
+            'itinerisltd/wordpress',
             $version,
-            $dist,
+            [
+                'type' => 'zip',
+                'url' => $downloadUrl,
+            ],
             $this->requirementCollection->forWordPressCore($version)
         );
-    }
-
-    protected function parseName(string $url): ?string
-    {
-        $name = null;
-        if (Str::endsWith($url, '.zip')) {
-            $name = 'itinerisltd/wordpress';
-        }
-        if (Str::endsWith($url, '.tar.gz')) {
-            $name = 'itinerisltd/wordpress-tar';
-        }
-
-        return $name;
-    }
-
-    protected function parseDist(string $url): ?array
-    {
-        $dist = null;
-        if (Str::endsWith($url, '.zip')) {
-            $dist = [
-                'type' => 'zip',
-                'url' => $url,
-            ];
-        } elseif (Str::endsWith($url, '.tar.gz')) {
-            $dist = [
-                'type' => 'tar',
-                'url' => $url,
-            ];
-        }
-
-        return $dist;
     }
 
     protected function parseVersion(string $url): ?string

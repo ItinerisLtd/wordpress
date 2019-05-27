@@ -11,9 +11,9 @@ class ReleaseRepo
 {
     protected const RELEASE_FEED_HOSTNAME = 'wordpress.org';
     protected const RELEASE_FEED_URL = 'https://wordpress.org/download/releases/';
-    protected const KNOWN_RELEASES = 612; // As of 25 May 2019.
+    protected const KNOWN_RELEASES = 306; // As of 25 May 2019.
     // phpcs:ignore Generic.Files.LineLength.TooLong
-    protected const DOWNLOAD_URL_PATTERN = '/<a[^>]*href="(?<downloadUrl>https:\/\/[\S]+\/wordpress-[4-9]\S+[^IIS]\.(zip|tar\.gz))\.sha1"[^>]*>/';
+    protected const DOWNLOAD_URL_PATTERN = '/<a[^>]*href="(?<downloadUrl>https:\/\/[\S]+\/wordpress-[4-9]\S+[^IIS]\.zip)\.sha1"[^>]*>/';
 
     /** @var ReleaseFactory */
     protected $releaseFactory;

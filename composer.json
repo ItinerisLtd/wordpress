@@ -5,7 +5,6 @@
   "keywords": [
     "composer",
     "package",
-    "satis",
     "wordpress",
     "wp"
   ],
@@ -29,8 +28,9 @@
     "php": "^7.3",
     "ext-json": "*",
     "composer/composer": "^1.8",
-    "composer/satis": "dev-master#f90f13d",
-    "composer/semver": "^1.5"
+    "composer/semver": "^1.5",
+    "czproject/git-php": "^3.17",
+    "symfony/filesystem": "^4.2"
   },
   "require-dev": {
     "phpstan/phpstan": "^0.11.6",
@@ -49,9 +49,8 @@
   "prefer-stable": true,
   "scripts": {
     "phpstan:analyse": "phpstan analyse",
-    "satis:build": [
-      "Composer\\Itineris\\WordPress\\GenerateSatisJson::run",
-      "satis build ./satis.json"
+    "build": [
+      "Composer\\Itineris\\WordPress\\Build::run"
     ],
     "style:check": "phpcs",
     "style:fix": "phpcbf"

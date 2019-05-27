@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Composer\Itineris\WordPress;
 
+use Composer\Itineris\WordPress\Requirement\RequirementCollection;
 use Composer\Semver\VersionParser;
 use UnexpectedValueException;
 
@@ -11,16 +12,24 @@ class ReleaseFactory
     protected const VERSION_PATTERN = '/\S+\/wordpress-(?<version>\S+[^IIS])(-IIS)?\.(zip|tar\.gz)/';
     /** @var VersionParser */
     protected $versionParser;
-    /** @var MinPhpVersion */
-    protected $minPhpVersion;
+    /** @var RequirementCollection */
+    protected $requirementCollection;
 
-    public function __construct(VersionParser $versionParser, MinPhpVersion $minPhpVersion)
+    public function __construct(VersionParser $versionParser, RequirementCollection $requirementCollection)
     {
         $this->versionParser = $versionParser;
-        $this->minPhpVersion = $minPhpVersion;
+        $this->requirementCollection = $requirementCollection;
     }
 
-    public function make(string $downloadUrl): ?Release
+    public static function make(): self
+    {
+        return new static(
+            new VersionParser(),
+            RequirementCollection::make()
+        );
+    }
+
+    public function build(string $downloadUrl): ?Release
     {
         $name = $this->parseName($downloadUrl);
         $dist = $this->parseDist($downloadUrl);
@@ -31,9 +40,12 @@ class ReleaseFactory
             return null;
         }
 
-        $require = $this->makeRequire($version);
-
-        return new Release($name, $version, $dist, $require);
+        return new Release(
+            $name,
+            $version,
+            $dist,
+            $this->requirementCollection->forWordPressCore($version)
+        );
     }
 
     protected function parseName(string $url): ?string
@@ -84,15 +96,5 @@ class ReleaseFactory
         } catch (UnexpectedValueException $exception) {
             return false;
         }
-    }
-
-    protected function makeRequire(string $version): array
-    {
-        $minPhpVersion = $this->minPhpVersion->forWordPressCore($version);
-
-        return [
-            'php' => ">=${minPhpVersion}",
-            'roots/wordpress-core-installer' => '>=1.0.0',
-        ];
     }
 }

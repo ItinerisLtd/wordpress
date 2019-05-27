@@ -61,7 +61,7 @@ class ReleaseRepo
     protected function makeReleases(array $downloadUrls): array
     {
         $releases = array_map(function (string $downloadUrl): ?Release {
-            return $this->releaseFactory->make($downloadUrl);
+            return $this->releaseFactory->build($downloadUrl);
         }, $downloadUrls);
         $releases = array_filter($releases);
 

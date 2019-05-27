@@ -5,34 +5,45 @@ namespace Composer\Itineris\WordPress;
 
 use Composer\Itineris\WordPress\Requirement\RequirementCollection;
 use Composer\Semver\VersionParser;
+use Composer\Util\RemoteFilesystem;
 use UnexpectedValueException;
 
 class ReleaseFactory
 {
     protected const VERSION_PATTERN = '/\S+\/wordpress-(?<version>\S+[^IIS])(-IIS)?\.(zip|tar\.gz)/';
+
     /** @var VersionParser */
     protected $versionParser;
     /** @var RequirementCollection */
     protected $requirementCollection;
+    /** @var RemoteFilesystem */
+    protected $rfs;
 
-    public function __construct(VersionParser $versionParser, RequirementCollection $requirementCollection)
-    {
+    public function __construct(
+        VersionParser $versionParser,
+        RequirementCollection $requirementCollection,
+        RemoteFilesystem $rfs
+    ) {
         $this->versionParser = $versionParser;
         $this->requirementCollection = $requirementCollection;
+        $this->rfs = $rfs;
     }
 
-    public static function make(): self
+    public static function make(RemoteFilesystem $rfs): self
     {
         return new static(
             new VersionParser(),
-            RequirementCollection::make()
+            RequirementCollection::make(),
+            $rfs
         );
     }
 
     public function build(string $downloadUrl): ?Release
     {
         $version = $this->parseVersion($downloadUrl);
-        if (null === $version) {
+        $shasum = $this->getShasum($downloadUrl);
+
+        if (null === $version || null === $shasum) {
             return null;
         }
 
@@ -42,6 +53,7 @@ class ReleaseFactory
             [
                 'type' => 'zip',
                 'url' => $downloadUrl,
+                'shasum' => $shasum,
             ],
             $this->requirementCollection->forWordPressCore($version)
         );
@@ -64,5 +76,15 @@ class ReleaseFactory
         } catch (UnexpectedValueException $exception) {
             return false;
         }
+    }
+
+    protected function getShasum(string $url): ?string
+    {
+        $shasum = $this->rfs->getContents(
+            Url::getHost($url),
+            $url . '.sha1'
+        );
+
+        return is_string($shasum) ? $shasum : null;
     }
 }

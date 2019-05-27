@@ -9,7 +9,6 @@ use RuntimeException;
 
 class ReleaseRepo
 {
-    protected const RELEASE_FEED_HOSTNAME = 'wordpress.org';
     protected const RELEASE_FEED_URL = 'https://wordpress.org/download/releases/';
     protected const KNOWN_RELEASES = 306; // As of 25 May 2019.
     // phpcs:ignore Generic.Files.LineLength.TooLong
@@ -28,9 +27,11 @@ class ReleaseRepo
 
     public static function make(IOInterface $io): self
     {
+        $rfs = new RemoteFilesystem($io);
+
         return new static(
-            ReleaseFactory::make(),
-            new RemoteFilesystem($io)
+            ReleaseFactory::make($rfs),
+            $rfs
         );
     }
 
@@ -44,7 +45,10 @@ class ReleaseRepo
     {
         $matches = [];
 
-        $html = (string) $this->rfs->getContents(static::RELEASE_FEED_HOSTNAME, static::RELEASE_FEED_URL);
+        $html = (string) $this->rfs->getContents(
+            Url::getHost(static::RELEASE_FEED_URL),
+            static::RELEASE_FEED_URL
+        );
 
         preg_match_all(static::DOWNLOAD_URL_PATTERN, $html, $matches);
         $downloadUrls = $matches['downloadUrl'] ?? [];

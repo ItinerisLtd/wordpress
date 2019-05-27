@@ -1,7 +1,7 @@
 {
   "name": "itinerisltd/wordpress-packager",
   "type": "project",
-  "description": "TODO.",
+  "description": "Generates itinerisltd/wordpress composer package.",
   "keywords": [
     "composer",
     "package",

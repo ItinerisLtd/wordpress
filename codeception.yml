@@ -10,5 +10,7 @@ extensions:
     enabled:
         - Codeception\Extension\RunFailed
 settings:
-    shuffle: true
     colors: true
+    lint: true
+    report_useless_tests: true
+    shuffle: true

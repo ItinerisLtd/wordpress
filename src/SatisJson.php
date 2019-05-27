@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Composer\Itineris\WordPress;
 
+use Composer\IO\IOInterface;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use UnexpectedValueException;
@@ -13,6 +14,14 @@ class SatisJson
     protected $releaseRepo;
     /** @var Filesystem */
     protected $filesystem;
+
+    public static function make(IOInterface $io): self
+    {
+        return new static(
+            ReleaseRepo::make($io),
+            new Filesystem()
+        );
+    }
 
     public function __construct(ReleaseRepo $releaseRepo, Filesystem $filesystem)
     {

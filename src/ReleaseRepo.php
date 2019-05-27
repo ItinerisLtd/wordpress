@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Composer\Itineris\WordPress;
 
+use Composer\IO\IOInterface;
 use Composer\Util\RemoteFilesystem;
 use RuntimeException;
 
@@ -18,6 +19,14 @@ class ReleaseRepo
     protected $releaseFactory;
     /** @var RemoteFilesystem */
     protected $rfs;
+
+    public static function make(IOInterface $io): self
+    {
+        return new static(
+            ReleaseFactory::make(),
+            new RemoteFilesystem($io)
+        );
+    }
 
     public function __construct(ReleaseFactory $releaseFactory, RemoteFilesystem $rfs)
     {

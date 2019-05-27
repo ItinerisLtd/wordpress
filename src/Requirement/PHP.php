@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Composer\Itineris\WordPress;
+namespace Composer\Itineris\WordPress\Requirement;
 
 use Composer\Semver\Semver;
 
-class MinPhpVersion
+class PHP implements RequirementInterface
 {
     /**
      * Determine minimum PHP version for WordPress core.
@@ -19,12 +19,17 @@ class MinPhpVersion
      */
     public function forWordPressCore(string $version): string
     {
-        $minPhpVersion = '5.6.20';
+        $minPhpVersion = '>=5.6.20';
 
         if (Semver::satisfies($version, '< 5.2-dev')) {
-            $minPhpVersion = '5.2.4';
+            $minPhpVersion = '>=5.2.4';
         }
 
         return $minPhpVersion;
+    }
+
+    public function getPackageName(): string
+    {
+        return 'php';
     }
 }

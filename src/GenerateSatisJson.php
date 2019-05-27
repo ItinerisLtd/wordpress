@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Composer\Itineris\WordPress;
 
 use Composer\Script\Event;
-use Composer\Semver\VersionParser;
 use Composer\Util\RemoteFilesystem;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -12,9 +11,7 @@ class GenerateSatisJson
 {
     public static function run(Event $event): void
     {
-        $versionParser = new VersionParser();
-        $minPhpRequirement = new MinPhpVersion();
-        $releaseFactory = new ReleaseFactory($versionParser, $minPhpRequirement);
+        $releaseFactory = ReleaseFactory::make();
         $io = $event->getIO();
         $rfs = new RemoteFilesystem($io);
         $releaseRepo = new ReleaseRepo($releaseFactory, $rfs);

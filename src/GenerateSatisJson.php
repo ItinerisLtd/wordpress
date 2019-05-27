@@ -11,10 +11,9 @@ class GenerateSatisJson
 {
     public static function run(Event $event): void
     {
-        $releaseFactory = ReleaseFactory::make();
         $io = $event->getIO();
-        $rfs = new RemoteFilesystem($io);
-        $releaseRepo = new ReleaseRepo($releaseFactory, $rfs);
+
+        $releaseRepo = ReleaseRepo::make($io);
         $filesystem = new Filesystem();
         $satisJson = new SatisJson($releaseRepo, $filesystem);
 

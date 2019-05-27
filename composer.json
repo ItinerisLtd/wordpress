@@ -33,6 +33,8 @@
     "symfony/filesystem": "^4.2"
   },
   "require-dev": {
+    "codeception/codeception": "^3.0",
+    "codeception/mockery-module": "^0.3.0",
     "phpstan/phpstan": "^0.11.6",
     "phpstan/phpstan-strict-rules": "^0.11.0",
     "roave/security-advisories": "dev-master",
@@ -48,12 +50,16 @@
   },
   "prefer-stable": true,
   "scripts": {
-    "phpstan:analyse": "phpstan analyse",
     "build": [
       "Composer\\Itineris\\WordPress\\Build::run"
     ],
+    "phpstan:analyse": "phpstan analyse",
     "style:check": "phpcs",
-    "style:fix": "phpcbf"
+    "style:fix": "phpcbf",
+    "test": "codecept run",
+    "test:accrptionce": "codecept run accrptionce",
+    "test:functional": "codecept run functional",
+    "test:unit": "codecept run unit"
   },
   "support": {
     "email": "hello@itineris.co.uk",

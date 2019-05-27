@@ -55,6 +55,7 @@ class ReleaseFactory
                 'type' => 'zip',
                 'url' => $downloadUrl,
                 'shasum' => $shasum,
+                'mirrors' => $this->getMirrors($downloadUrl),
             ],
             $this->requirementCollection->forWordPressCore($version)
         );
@@ -87,5 +88,16 @@ class ReleaseFactory
         );
 
         return is_string($shasum) ? $shasum : null;
+    }
+
+    protected function getMirrors(string $downloadUrl): array
+    {
+        $mirror = str_replace(
+            'https://wordpress.org/wordpress-',
+            'https://downloads.wordpress.org/release/wordpress-',
+            $downloadUrl
+        );
+
+        return $downloadUrl === $mirror ? [] : [$mirror];
     }
 }

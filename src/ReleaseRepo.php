@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Composer\Itineris\WordPress;
 
 use Composer\IO\IOInterface;
+use Composer\Itineris\WordPress\Util\Url;
 use Composer\Util\RemoteFilesystem;
 use RuntimeException;
 

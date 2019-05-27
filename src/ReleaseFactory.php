@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Composer\Itineris\WordPress;
 
 use Composer\Itineris\WordPress\Requirement\RequirementCollection;
+use Composer\Itineris\WordPress\Util\Url;
 use Composer\Semver\VersionParser;
 use Composer\Util\RemoteFilesystem;
 use UnexpectedValueException;

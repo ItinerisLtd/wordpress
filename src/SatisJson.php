@@ -15,18 +15,18 @@ class SatisJson
     /** @var Filesystem */
     protected $filesystem;
 
+    public function __construct(ReleaseRepo $releaseRepo, Filesystem $filesystem)
+    {
+        $this->releaseRepo = $releaseRepo;
+        $this->filesystem = $filesystem;
+    }
+
     public static function make(IOInterface $io): self
     {
         return new static(
             ReleaseRepo::make($io),
             new Filesystem()
         );
-    }
-
-    public function __construct(ReleaseRepo $releaseRepo, Filesystem $filesystem)
-    {
-        $this->releaseRepo = $releaseRepo;
-        $this->filesystem = $filesystem;
     }
 
     public function generate(string $destinationPath, string $templatePath): void

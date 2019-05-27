@@ -20,18 +20,18 @@ class ReleaseRepo
     /** @var RemoteFilesystem */
     protected $rfs;
 
+    public function __construct(ReleaseFactory $releaseFactory, RemoteFilesystem $rfs)
+    {
+        $this->releaseFactory = $releaseFactory;
+        $this->rfs = $rfs;
+    }
+
     public static function make(IOInterface $io): self
     {
         return new static(
             ReleaseFactory::make(),
             new RemoteFilesystem($io)
         );
-    }
-
-    public function __construct(ReleaseFactory $releaseFactory, RemoteFilesystem $rfs)
-    {
-        $this->releaseFactory = $releaseFactory;
-        $this->rfs = $rfs;
     }
 
     public function all(): array

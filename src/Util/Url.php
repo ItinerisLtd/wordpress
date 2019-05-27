@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Composer\Itineris\WordPress;
+namespace Composer\Itineris\WordPress\Util;
 
 class Url
 {

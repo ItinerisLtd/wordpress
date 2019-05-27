@@ -29,6 +29,9 @@ class Release
             'version' => $this->version,
             'dist' => $this->dist,
             'require' => $this->require,
+            'provide' => [
+                'wordpress/core-implementation' => $this->version,
+            ],
             'type' => 'wordpress-core',
             'description' => 'WordPress is web software you can use to create a beautiful website or blog.',
             'keywords' => [

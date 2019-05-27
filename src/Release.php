@@ -27,8 +27,8 @@ class Release
         return [
             'name' => $this->name,
             'version' => $this->version,
-            'dist' => $this->dist,
-            'require' => $this->require,
+            'dist' => array_filter($this->dist),
+            'require' => array_filter($this->require),
             'provide' => [
                 'wordpress/core-implementation' => $this->version,
             ],

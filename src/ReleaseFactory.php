@@ -60,7 +60,7 @@ class ReleaseFactory
         return is_string($shasum) ? $shasum : null;
     }
 
-    protected function getMirrors(string $downloadUrl): array
+    protected function getMirrors(string $downloadUrl): ?array
     {
         $mirror = str_replace(
             'https://wordpress.org/wordpress-',
@@ -68,6 +68,6 @@ class ReleaseFactory
             $downloadUrl
         );
 
-        return $downloadUrl === $mirror ? [] : [$mirror];
+        return $downloadUrl === $mirror ? null : [$mirror];
     }
 }
